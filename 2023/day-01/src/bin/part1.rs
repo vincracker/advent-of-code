@@ -1,3 +1,4 @@
+
 fn main() {
     println!("Part 1");
     let input = include_str!("./input1.txt");
@@ -6,7 +7,22 @@ fn main() {
 }
 
 fn part1(input: &str) -> String {
-    "2".to_string()
+    let output: u32 = input
+        .lines()
+        .map(|line| {
+            let mut it = line.chars().filter_map(|character| character.to_digit(10));
+            let first = it.next().expect("Should be a number");
+            let last = it.last();
+
+            dbg!(match last {
+                Some(num) => format!("{first}{num}").parse::<u32>(),
+                None => format!("{first}{first}").parse::<u32>(),
+            })
+            .expect("Should be a number")
+        })
+        .sum();
+
+    output.to_string()
 }
 
 #[cfg(test)]
@@ -15,7 +31,12 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = part1("");
-        assert_eq!(result, "3".to_string());
+        let result = part1(
+            "1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet",
+        );
+        assert_eq!(result, "142".to_string());
     }
 }
